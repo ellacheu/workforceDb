@@ -1,7 +1,63 @@
+const inquirer = require('inquirer');
+const mysql = require('mysql2');
 
+const db = mysql.createConnection ({
+    host: 'localhost',
+    user: 'root',
+    password: 'password',
+    database: 'workforce_db',
+});
 
+const NavMenu = async () => {
+    const { action } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'action',
+        message: 'Select an action:',
+        choices: [
+          'View departments',
+          'Add new department',
+          'View roles',
+          'Add new role',
+          'View employees',
+          'Add new employee',
+          'Update employee role',
+          'Exit',
+        ],
+      },
+    ]);
 
-
+    switch(action) {
+        case 'View departments':
+        await viewDepartments();
+    break;
+        case 'Add new department':
+        await addDepartment();
+    break;
+        case 'View roles':
+        await viewRoles();
+    break;
+        case 'Add new role':
+        await addRole();
+    break;
+        case 'View employee':
+        await viewRole();
+    break;
+        case 'Add new employee':
+        await addEmployee();
+    break;
+        case 'Update employee role':
+        await updateEmployee();
+    break;
+        default: 
+        console.log('Invalid input');
+    break;    
+        case 'Exit':
+        console.log('Goodbye!');
+    return;
+    }
+    NavMenu();
+  }
 
 // GIVEN a command-line application that accepts user input
 // WHEN I start the application
