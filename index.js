@@ -29,19 +29,19 @@ const NavMenu = async () => {
         await addDepartment();
     break;
         case 'View roles':
-        await viewRoles();
+        await viewRole();
     break;
         case 'Add new role':
         await addRole();
     break;
         case 'View employee':
-        await viewRole();
+        await viewEmployee();
     break;
         case 'Add new employee':
         await addEmployee();
     break;
         case 'Update employee role':
-        await updateEmployee();
+        await updateEmployeeRole();
     break;
         default: 
         console.log('Invalid input');
@@ -57,7 +57,7 @@ const viewDepartments = async () => {
     try {
         const department = await db.getAllDepartment();
         console.log('Departments');
-        console.table(deparment);
+        console.table(department);
     } catch (error) {
         console.error('Unable to retrieve departments', error);
     }
@@ -65,6 +65,11 @@ const viewDepartments = async () => {
 
 const addDepartment = async () => {
     const department = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'id',
+            message: 'Enter department id'
+        },
         {
             type: 'input',
             name: 'name',
@@ -176,7 +181,6 @@ const updateEmployeeRole = async () => {
       console.error ('Unable to update', error)
     }
   };
-
 
 
   NavMenu();
