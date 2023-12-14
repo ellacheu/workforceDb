@@ -59,6 +59,60 @@ const NavMenu = async () => {
     NavMenu();
   }
 
+const viewDepartments = async () => {
+    try {
+        const department = await db.getAllDepartments();
+        console.log('Departments');
+        console.table(deparment);
+    } catch (err) {
+        console.error('Unable to retrieve departments', error);
+    }
+};
+
+const addDepartment = async () => {
+    const department = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: 'Enter department name',
+        },
+    ]);
+    try {
+        const newDepartment = await db.addDepartment(department.name);
+        console.log('Department added', newDepartment);
+    } catch (error) {
+        console.error ('Unable to add department', error);
+    }
+};
+
+const viewRole = async () => {
+    try {
+        const role = await db.getAllRole();
+        console.log('Roles');
+        console.table(role);
+    } catch (error) {
+        console.error('Unable to retrieve roles');
+    }
+};
+
+const addRole = async () => {
+    const role = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: 'Enter new role',
+        }
+    ]);
+    try {
+        const newRole = await db.addRole(role.name);
+        console.log('Role added', newRole);
+    } catch (error) {
+        console.error ('Unable to add new role', error);
+    }
+};
+
+
+
 // GIVEN a command-line application that accepts user input
 // WHEN I start the application
 
