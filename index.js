@@ -1,12 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-
-const db = mysql.createConnection ({
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'workforce_db',
-});
+const db = require('./db');
 
 const NavMenu = async () => {
     const { action } = await inquirer.prompt([
@@ -56,15 +50,15 @@ const NavMenu = async () => {
         console.log('Goodbye!');
     return;
     }
-    NavMenu();
-  }
+  
+  };
 
 const viewDepartments = async () => {
     try {
-        const department = await db.getAllDepartments();
+        const department = await db.getAllDepartment();
         console.log('Departments');
         console.table(deparment);
-    } catch (err) {
+    } catch (error) {
         console.error('Unable to retrieve departments', error);
     }
 };
@@ -111,39 +105,78 @@ const addRole = async () => {
     }
 };
 
+const viewEmployee = async () => {
+    try {
+        const role = await db.getAllEmployee();
+        console.log('Employees');
+        console.table(employee);
+    } catch (error) {
+        console.error('Unable to retrieve employees');
+    }
+};
+
+const addEmployee = async () => {
+    const { first_name } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'first_name',
+          message: 'Enter the first name of the employee:',
+        },
+      ]);
+      const { last_name } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'last_name',
+          message: 'Enter the last name of the employee:',
+        },
+      ]);
+      const { role_id } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'role_id',
+          message: 'Enter the role ID of the employee:',
+        },
+      ]);
+      const { manager_id } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'manager_id',
+          message: 'Enter the manager ID of the employee:',
+        },
+      ]);
+    try {
+        const newEmployee = await db.addEmployee(first_name, last_name, role_id, manager_id);
+        console.log('Employee added', newEmployee);
+    } catch (error) {
+        console.error ('Unable to add new employee', error);
+    }
+};
+
+const updateEmployeeRole = async () => {
+    const { employeeId } = await inquirer.prompt ([
+      {
+        type: 'input',
+        name: 'employeeId',
+        message: 'Enter employee Id'
+      },
+    ]);
+
+    const { roleId } = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'roleId',
+        message: 'Enter new role Id',
+      },
+    ]);
+
+    try {
+      const updateEmployeeRole = await db.updateEmployeeRole(employeeId, roleId);
+      console.log('Employee updated', updateEmployeeRole);
+    } catch (error) {
+      console.error ('Unable to update', error)
+    }
+  };
 
 
-// GIVEN a command-line application that accepts user input
-// WHEN I start the application
 
-// THEN I am presented with the following options: 
-
-// view all departments, 
-// view all roles, 
-// view all employees, 
-// add a department, 
-// add a role, 
-// add an employee, 
-// and update an employee role
-
-// WHEN I choose to view all departments
-
-// THEN I am presented with a formatted table showing department names and department ids
-// WHEN I choose to view all roles
-
-// THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
-// WHEN I choose to view all employees
-
-// THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
-// WHEN I choose to add a department
-
-// THEN I am prompted to enter the name of the department and that department is added to the database
-// WHEN I choose to add a role
-
-// THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
-// WHEN I choose to add an employee
-
-// THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-// WHEN I choose to update an employee role
-
-// THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+  NavMenu();
