@@ -2,6 +2,13 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const db = require('./db');
 
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'password',
+  database: 'workforce_db',
+});
+
 const NavMenu = async () => {
     const { action } = await inquirer.prompt([
       {
@@ -61,15 +68,11 @@ const viewDepartments = async () => {
     } catch (error) {
         console.error('Unable to retrieve departments', error);
     }
+    NavMenu();
 };
 
 const addDepartment = async () => {
     const department = await inquirer.prompt([
-        {
-            type: 'input',
-            name: 'id',
-            message: 'Enter department id'
-        },
         {
             type: 'input',
             name: 'name',
@@ -82,6 +85,7 @@ const addDepartment = async () => {
     } catch (error) {
         console.error ('Unable to add department', error);
     }
+    NavMenu();
 };
 
 const viewRole = async () => {
@@ -92,14 +96,25 @@ const viewRole = async () => {
     } catch (error) {
         console.error('Unable to retrieve roles');
     }
+    NavMenu();
 };
 
 const addRole = async () => {
     const role = await inquirer.prompt([
         {
             type: 'input',
-            name: 'name',
+            name: 'title',
             message: 'Enter new role',
+        },
+        {
+          type: 'input',
+          name: 'salary',
+          message: 'Enter salary amount:',
+        },
+        {
+          type: 'input',
+          name: 'department_id',
+          message: 'Enter associated department id:',
         }
     ]);
     try {
@@ -108,16 +123,18 @@ const addRole = async () => {
     } catch (error) {
         console.error ('Unable to add new role', error);
     }
+    NavMenu();
 };
 
 const viewEmployee = async () => {
     try {
-        const role = await db.getAllEmployee();
-        console.log('Employees');
+        const employee = await db.getAllEmployee();
+        console.log('Employee');
         console.table(employee);
     } catch (error) {
         console.error('Unable to retrieve employees');
     }
+    NavMenu();
 };
 
 const addEmployee = async () => {
@@ -155,6 +172,7 @@ const addEmployee = async () => {
     } catch (error) {
         console.error ('Unable to add new employee', error);
     }
+  NavMenu();
 };
 
 const updateEmployeeRole = async () => {
@@ -180,6 +198,7 @@ const updateEmployeeRole = async () => {
     } catch (error) {
       console.error ('Unable to update', error)
     }
+    NavMenu();
   };
 
 
